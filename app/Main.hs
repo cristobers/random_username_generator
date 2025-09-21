@@ -31,14 +31,16 @@ dsl _ _ _    = error "Unknown"
 
 getRandomIndex :: Int -> IO Int
 getRandomIndex size = getStdRandom (randomR (0,size-1))
-
-capitalise :: String -> String
-capitalise s = [intoUppercase $ head s] ++ tail s
  
-intoUppercase :: Char -> Char
+capitalise :: String -> String
+capitalise s = case intoUppercase $ head s of
+                        Just c -> [c] ++ tail s
+                        _      -> s
+
+intoUppercase :: Char -> Maybe Char
 intoUppercase c 
-    | asNumber > 122 || asNumber < 97 = error "Not a lowercase character."
-    | otherwise                       = chr $ (asNumber) - 32
+    | asNumber > 122 || asNumber < 97 = Nothing
+    | otherwise                       = Just $ chr $ (asNumber) - 32
     where
         asNumber = ord c
 
